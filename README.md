@@ -12,70 +12,78 @@ In [2]:
 warnings.filterwarnings('ignore')
 #warnings.simplifilter('ignore')
 
-
-
-
-
-
-
-The output:
+idx=vals.argsort()[0][-2]
+ flat= vals.flatten()
+ flat.sort()
+ req_tfidf = flat[-2]
+ if(req_tfidf==0):
+ bindu_response=bindu_response+" I am sorry,I am not getting,please do a google 
+ return bindu_response 
+ else:
+ bindu_response = bindu_response+sent_tokens[idx]
+ return bindu_response
+In [11]:
+import nltk.corpus
+nltk.download('stopwords', quiet=True, raise_on_error=True)
+stop_words = set(nltk.corpus.stopwords.words('english'))
+tokenized_stop_words = nltk.word_tokenize(' '.join(nltk.corpus.stopwords.words('eng
+class Tokenizer(object):
+ def __init__(self):
+ nltk.download('punkt', quiet=True, raise_on_error=True)
+ self.stemmer = nltk.stem.PorterStemmer()
+ 
+ def _stem(self, token):
+ if (token in stop_words):
+ return token # Solves error "UserWarning: Your stop_words may be incon
+ return self.stemmer.stem(token)
+ 
+ def __call__(self, line):
+ tokens = nltk.word_tokenize(line)
+ tokens = (self._stem(token) for token in tokens) # Stemming
+ return list(tokens)
+ 
+tokenizer = CountVectorizer(min_df=5,
+ ngram_range=(1, 2),
+ tokenizer=Tokenizer(),
+ stop_words=tokenized_stop_words,
+lowercase=True)
+In [14]:
+flag=True
+print("BinduBot:Hello!! I'm Bindu,specifically designed to answer some basic querie
+while(flag== True):
+ user_response = input()
+ user_response= user_response.lower()
+ if(user_response!='bye'):
+ if(user_response=='thanks' or user_response=='thank you'):
+ flag= False
+ print("BinduBot: you are welcome.. come again for more info")
+ else:
+ if(greeting(user_response)!= None):
+ print("\n BinduBot: "+greeting(user_response)+"\n")
+ 
+ else:
+ sent_tokens.append(user_response)
+ word_tokens=word_tokens+nltk.word_tokenize(user_response)
+ final_words=list(set(word_tokens))
+ print("\n BinduBot:",end=" ")
+ print("\n ",response(user_response),"\n")
+ sent_tokens.remove(user_response)
+ 
+ else:
+ flag= False
+ print("BinduBot:GoodBye ! Take Care")
+8/10/22, 6:54 PM 23_BinduBot
+localhost:8888/nbconvert/html/23_BinduBot.ipynb?download=false 4/5
 BinduBot:Hello!! I'm Bindu,specifically designed to answer some basic queries abou
 t JNU.,if you wanna exit any time,type Bye!
 hello
- BinduBot: ask dear
-tell the history of jnu
- BinduBot: 
- jnu( jawaharlal nehru university): 
-history of jnu:
-the jawaharlal nehru university constituted under the jawaharlal nehru university
-act 1966, (53 of 1966) came into existence in
-1969. its objectives, as defined in the first schedule of the act, are as follow
-s:"the university shall endeavour to promote the principles for which jawaharlal n
-ehru worked during his life-time, national integration,social justice, secularism,
-democratic way of life, international understanding and scientific approach to the
-problems of society,for more details , visit the jnu website : https://www.jnu.ac.
-in . 
-tell about the fee structure
- BinduBot: 
- fee and mode of payment:
-tuition fee (annual) rs.216.00*** rs.120.00
-2 sports fee (annual) rs.16.50 rs.16.50
-3 literary & cultural fee (annual) rs.16.50 rs.16.50
-4 library fee (annual) rs.6.00 rs.6.00
-5 medical fee (annual) rs.9.00 ----
-6 medical booklet rs.12.00 ----
-7 students aid fund (annual) rs.4.50 ----
-8 *admission fee rs.5.00 rs.5.00
-9 *enrolment fee rs.5.00 rs.5.00
-10 *security deposit (refundable) rs.40.00 rs.40.00
-11 identity card folder rs.10.00 rs.10.00
-for more details , visit the jnu website : https://www.jnu.ac.in . 
-about jnu hostels
- BinduBot: 
- hostels in jnu:
-brahmaputra (boys),chandrabhaga (boys & girls)ganga (girls)godavari (girls),jhelum
-(boys),kaveri (boys)
-koyna (girls)
-lohit (boys & girls)
-mahi/mandavi (boys)
-mahanadi (mrsh) (married students)
-narmada (boys)
-periyar (boys)
-sabarmati (boys & girls)
-shipra (girls)
-sutlej (boys)
-tapti (boys & girls)
-yamuna (working women)
-damodar
-for more details , visit the jnu website : https://www.jnu.ac.in . 
-game and sports
- BinduBot: 
- games and sports:
-the university's sports office is located in the sports stadium, and is being look
-ed after by one full-time assistant director of physical
-8/10/22, 6:54 PM 23_BinduBot
-localhost:8888/nbconvert/html/23_BinduBot.ipynb?download=false 5/5
-education. 
+ BinduBot: ask 
+
+
+
+
+
+ 
 fellowships
  BinduBot: 
  fellowships/scholarships/ awards:
